@@ -204,12 +204,22 @@ export class TelegramChannel implements Channel {
       const fileId = photos?.[photos.length - 1]?.file_id || '';
       storeNonText(ctx, `[Photo|file_id:${fileId}]`);
     });
-    this.bot.on('message:video', (ctx) => storeNonText(ctx, '[Video]'));
-    this.bot.on('message:voice', (ctx) => storeNonText(ctx, '[Voice message]'));
-    this.bot.on('message:audio', (ctx) => storeNonText(ctx, '[Audio]'));
+    this.bot.on('message:video', (ctx) => {
+      const fileId = ctx.message.video?.file_id || '';
+      storeNonText(ctx, `[Video|file_id:${fileId}]`);
+    });
+    this.bot.on('message:voice', (ctx) => {
+      const fileId = ctx.message.voice?.file_id || '';
+      storeNonText(ctx, `[Voice message|file_id:${fileId}]`);
+    });
+    this.bot.on('message:audio', (ctx) => {
+      const fileId = ctx.message.audio?.file_id || '';
+      storeNonText(ctx, `[Audio|file_id:${fileId}]`);
+    });
     this.bot.on('message:document', (ctx) => {
       const name = ctx.message.document?.file_name || 'file';
-      storeNonText(ctx, `[Document: ${name}]`);
+      const fileId = ctx.message.document?.file_id || '';
+      storeNonText(ctx, `[Document: ${name}|file_id:${fileId}]`);
     });
     this.bot.on('message:sticker', (ctx) => {
       const emoji = ctx.message.sticker?.emoji || '';
